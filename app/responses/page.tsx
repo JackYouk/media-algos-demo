@@ -27,7 +27,7 @@ export default function ResponsesPage() {
 
     const fetchResponses = async () => {
         try {
-            const response = await fetch('/api/getResponses');
+            const response = await fetch('/api/getResponses', { cache: 'no-store' });
             if (!response.ok) {
                 throw new Error(`Error: ${response.status} ${response.statusText}`);
             }

@@ -21,7 +21,7 @@ export default function ResponsesPage() {
     const [responses, setResponses] = useState<Response[]>([]);
     const [activeResponse, setActiveResponse] = useState<number>(0);
     const [showBias, setShowBias] = useState<boolean>(false);
-    const [timeLeft, setTimeLeft] = useState<number>(10);
+    const [timeLeft, setTimeLeft] = useState<number>(120);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 

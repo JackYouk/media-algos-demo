@@ -21,7 +21,7 @@ export default function ResponsesPage() {
     const [responses, setResponses] = useState<Response[]>([]);
     const [activeResponse, setActiveResponse] = useState<number>(0);
     const [showBias, setShowBias] = useState<boolean>(false);
-    const [timeLeft, setTimeLeft] = useState<number>(120);
+    const [timeLeft, setTimeLeft] = useState<number>(10);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -51,6 +51,14 @@ export default function ResponsesPage() {
         return () => clearInterval(interval);
     }, []);
 
+    useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
+        const reveal = searchParams.get('reveal');
+        if (reveal === 'true') {
+            setShowBias(true);
+        }
+    }, []);
+
     const biasFilteredResponses = responses.filter(response => response.bias);
 
     useEffect(() => {
@@ -60,6 +68,10 @@ export default function ResponsesPage() {
                     if (prevTime <= 1) {
                         clearInterval(timer);
                         setShowBias(true);
+                        const searchParams = new URLSearchParams(window.location.search);
+                        searchParams.set('reveal', 'true');
+                        const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+                        window.history.pushState(null, '', newUrl);
                         return 0;
                     }
                     return prevTime - 1;

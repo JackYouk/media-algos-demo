@@ -26,8 +26,9 @@ export default function ResponsesPage() {
     const [error, setError] = useState<string | null>(null);
 
     const fetchResponses = async () => {
+        const timestamp = Date.parse(new Date().toString());
         try {
-            const response = await fetch('/api/getResponses', { cache: 'no-store' });
+            const response = await fetch(`/api/getResponses?tid=${timestamp}`, { next: { revalidate: 0 } });
             if (!response.ok) {
                 throw new Error(`Error: ${response.status} ${response.statusText}`);
             }

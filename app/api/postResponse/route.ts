@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 // import Sentiment from "sentiment";
-import fs from "fs-extra";
-import path from "path";
+import { sql } from '@vercel/postgres';
 import { classifyResponseWithAi } from "@/lib/ai";
 
 // const sentiment = new Sentiment();
-const responsesFilePath = path.join(process.cwd(), "data", "responses.json");
 const BIAS_PREFERENCE = "yes";
 
 export async function POST(req: NextRequest) {
@@ -44,20 +42,8 @@ export async function POST(req: NextRequest) {
       bias = false;
     }
 
-    const newResponse = {
-      text: responseText,
-      bias: bias,
-      // sentimentScore: sentimentScore,
-      timestamp: new Date().toISOString(),
-    };
-
-    let responses = [];
-    if (await fs.pathExists(responsesFilePath)) {
-      const fileData = await fs.readFile(responsesFilePath, "utf-8");
-      responses = JSON.parse(fileData);
-    }
-    responses.push(newResponse);
-    await fs.writeFile(responsesFilePath, JSON.stringify(responses, null, 2));
+    const timestamp = new Date().toISOString();
+    await sql`INSERT INTO Responses (text, bias, timestamp) VALUES (${responseText}, ${bias}, ${timestamp}); `;
 
     return NextResponse.json(
       { status: 201, message: "Response recorded successfully." },

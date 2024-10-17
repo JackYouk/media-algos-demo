@@ -6,6 +6,7 @@ import { ArrowLeftCircle, ArrowRightCircle, Loader2Icon } from "lucide-react";
 import { useState, useEffect } from "react";
   
 interface Response {
+    id: string;
     text: string;
     bias: boolean;
     timestamp: string;
